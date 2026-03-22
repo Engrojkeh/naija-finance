@@ -124,11 +124,23 @@ const ExpenseTab = ({ user, fetchAllData }) => {
                         <input type="date" className="input-3d" value={date} onChange={e => setDate(e.target.value)} required disabled={isSubmitting} />
                     </div>
                     
-                    <div className="input-group">
-                        <label>What did you buy? (Description)</label>
-                        <input type="text" className="input-3d" placeholder={transactionType === 'Expense' ? "e.g. Light bills, Fuel, Food stuff" : "Any extra details..."} value={note} onChange={e => setNote(e.target.value)} required={transactionType === 'Expense'} disabled={isSubmitting} />
-                    </div>
-                    
+                   <div className="input-group">
+    <label>
+        {transactionType === 'Expense' 
+            ? 'What did you buy? (Description)' 
+            : 'Description (Optional)'}
+    </label>
+    <input 
+        type="text" 
+        className="input-3d" 
+        placeholder={transactionType === 'Expense' ? "e.g. Light bills, Fuel, Food stuff" : "Any extra details..."} 
+        value={note} 
+        onChange={e => setNote(e.target.value)} 
+        required={transactionType === 'Expense'} 
+        disabled={isSubmitting} 
+    />
+</div>
+
                     <button type="submit" className="btn-3d-primary" style={{ marginTop: '2rem' }} disabled={isSubmitting}>
                         {isSubmitting ? 'Saving...' : `Save ${transactionType}`}
                     </button>
