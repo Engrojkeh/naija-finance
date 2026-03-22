@@ -2,7 +2,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
-const allowedOrigins = ['http://localhost:3000', 'https://your-future-domain.com'];
+const allowedOrigins = ['http://localhost:3000', 'https://fyp-personal-finance-tracker.vercel.app'];
 
 const corsOptions = {
     origin: (origin, callback) => {
