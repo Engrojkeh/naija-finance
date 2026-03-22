@@ -13,9 +13,12 @@ const BudgetTab = ({ user, fetchAllData }) => {
         setIsSubmitting(true);
         setBudgetMessage('Processing...');
         try {
+            // THE FIX: Clean the text before sending to the server!
+            const cleanCategory = budgetCategory.trim().charAt(0).toUpperCase() + budgetCategory.trim().slice(1).toLowerCase();
+
             await api.post('/budgets', {
                 user_id: user.id,
-                category_name: budgetCategory,
+                category_name: cleanCategory,
                 monthly_limit: budgetLimit,
                 month_year: budgetMonth || new Date().toISOString().slice(0, 7)
             });

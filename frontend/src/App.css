@@ -767,6 +767,11 @@ h6 {
   color: #b45309;
 }
 
+.alert-banner-3d.success {
+  border-left-color: #10b981;
+  color: #047857;
+}
+
 .status-badge-3d {
   padding: 1rem 1.2rem;
   border-radius: 12px;

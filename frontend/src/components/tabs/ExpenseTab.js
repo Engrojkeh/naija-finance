@@ -15,9 +15,12 @@ const ExpenseTab = ({ user, fetchAllData }) => {
         setIsSubmitting(true);
         setMessage('Processing...');
         try {
+            // THE FIX: Clean the text before sending to the server! (Trims spaces and capitalizes first letter)
+            const cleanCategory = categoryName.trim().charAt(0).toUpperCase() + categoryName.trim().slice(1).toLowerCase();
+
             const categoryResponse = await api.post('/categories', {
                 user_id: user.id,
-                category_name: categoryName
+                category_name: cleanCategory
             });
             const newCategoryId = categoryResponse.data.category_id;
 
