@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Changed the fallback URL to your live Render API!
+const API_URL = process.env.REACT_APP_API_URL || 'https://finance-tracker-api-suv8.onrender.com/api';
 
 const api = axios.create({
     baseURL: API_URL
