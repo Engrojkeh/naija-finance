@@ -859,12 +859,28 @@ h6 {
     display: none; 
   }
 
+  /* Icon-Only Logout Button for Mobile */
+  .logout-text {
+    display: none;
+  }
+
   .logout-link {
     margin-top: 0;
-    font-size: 0.8rem;
     background: rgba(239, 68, 68, 0.1);
-    padding: 0.4rem 0.8rem;
-    border-radius: 8px;
+    padding: 0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+  }
+
+  .logout-icon {
+    font-size: 1.4rem;
+    margin: 0;
+    transform: translateX(-2px); /* Centers the arrow perfectly */
   }
 
   /* Create a Horizontal Scrollable Nav Menu! */

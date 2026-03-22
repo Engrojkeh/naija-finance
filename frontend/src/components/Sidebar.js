@@ -49,7 +49,9 @@ const Sidebar = ({ user, activeTab, setActiveTab, onLogout }) => {
                 <div className="user-details">
                     <p>Welcome,</p>
                     <strong>{user.name}</strong>
-                    <button className="logout-link" onClick={handleSecureLogout}>↪ Secure Logout</button>
+                    <button className="logout-link" onClick={handleSecureLogout}>
+    <span className="logout-icon">↪</span> <span className="logout-text">Secure Logout</span>
+</button>
                 </div>
             </div>
         </aside>
