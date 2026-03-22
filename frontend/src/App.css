@@ -960,4 +960,28 @@ h6 {
   .auth-title {
     font-size: 1.5rem;
   }
+
+  /* Hide the text labels on mobile */
+  .nav-text {
+    display: none;
+  }
+
+  /* Make the icons bigger and center them */
+  .nav-icon {
+    font-size: 1.6rem !important;
+    margin: 0;
+  }
+
+  /* Make the buttons act as circular/square icon tabs */
+  .nav-item {
+    padding: 0.8rem;
+    flex: 1; /* Spreads them out evenly across the top */
+    justify-content: center;
+  }
+
+  /* Keep the orange active line centered under the icon */
+  .nav-item.active::before {
+    left: 35%;
+    width: 30%;
+  }
 }

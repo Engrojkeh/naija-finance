@@ -29,16 +29,16 @@ const Sidebar = ({ user, activeTab, setActiveTab, onLogout }) => {
             <div className="nav-section">
                 <p className="nav-label">OVERVIEW</p>
                 <button className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
-                    <span>⊞</span> Dashboard
+                    <span className="nav-icon">⊞</span> <span className="nav-text">Dashboard</span>
                 </button>
                 <button className={`nav-item ${activeTab === 'budgets' ? 'active' : ''}`} onClick={() => setActiveTab('budgets')}>
-                    <span>🎯</span> Set Budget
+                    <span className="nav-icon">🎯</span> <span className="nav-text">Set Budget</span>
                 </button>
                 <button className={`nav-item ${activeTab === 'expenses' ? 'active' : ''}`} onClick={() => setActiveTab('expenses')}>
-                    <span>💸</span> Log Expense
+                    <span className="nav-icon">💸</span> <span className="nav-text">Log Expense</span>
                 </button>
                 <button className={`nav-item ${activeTab === 'manage' ? 'active' : ''}`} onClick={() => setActiveTab('manage')}>
-                    <span>📋</span> Manage Records
+                    <span className="nav-icon">📋</span> <span className="nav-text">Manage Records</span>
                 </button>
             </div>
 
