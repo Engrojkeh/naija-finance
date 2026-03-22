@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 
 const ExpenseTab = ({ user, fetchAllData }) => {
@@ -9,13 +9,42 @@ const ExpenseTab = ({ user, fetchAllData }) => {
     const [note, setNote] = useState('');
     const [message, setMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // NEW: State to hold the user's active budgets for the dropdown
+    const [budgetOptions, setBudgetOptions] = useState([]);
+
+    // Fetch the user's budgets when the tab loads so they can select them!
+    useEffect(() => {
+        api.get(`/budgets/${user.id}`).then(res => {
+            // Get a unique list of category names from their budgets
+            const uniqueCategories = [...new Set(res.data.map(b => b.category_name))];
+            setBudgetOptions(uniqueCategories);
+            
+            // Automatically select the first budget in the dropdown to be helpful
+            if (uniqueCategories.length > 0) {
+                setCategoryName(uniqueCategories[0]);
+            }
+        }).catch(err => console.error("Could not fetch budgets for dropdown", err));
+    }, [user.id]);
+
+    // Handle switching between Income and Expense
+    const handleTypeChange = (e) => {
+        const type = e.target.value;
+        setTransactionType(type);
+        
+        // If they switch back to Expense, auto-select a budget again. If Income, clear it.
+        if (type === 'Expense' && budgetOptions.length > 0) {
+            setCategoryName(budgetOptions[0]);
+        } else {
+            setCategoryName('');
+        }
+    };
 
     const handleAddTransaction = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setMessage('Processing...');
         try {
-            // THE FIX: Clean the text before sending to the server! (Trims spaces and capitalizes first letter)
             const cleanCategory = categoryName.trim().charAt(0).toUpperCase() + categoryName.trim().slice(1).toLowerCase();
 
             const categoryResponse = await api.post('/categories', {
@@ -35,9 +64,10 @@ const ExpenseTab = ({ user, fetchAllData }) => {
 
             setMessage(`✅ ${transactionType} Saved Successfully!`);
             setAmount('');
-            setCategoryName('');
+            setNote(''); // Clear the note
             setDate('');
-            setNote('');
+            // Notice: We don't clear the Category! This lets you log multiple expenses to the same budget quickly.
+            
             setTimeout(() => setMessage(''), 3000);
             fetchAllData();
         } catch (error) {
@@ -62,7 +92,7 @@ const ExpenseTab = ({ user, fetchAllData }) => {
                 <form onSubmit={handleAddTransaction}>
                     <div className="input-group">
                         <label>Transaction Type</label>
-                        <select className="input-3d" value={transactionType} onChange={e => setTransactionType(e.target.value)} disabled={isSubmitting}>
+                        <select className="input-3d" value={transactionType} onChange={handleTypeChange} disabled={isSubmitting}>
                             <option value="Expense">Expense</option>
                             <option value="Income">Income</option>
                         </select>
@@ -71,18 +101,34 @@ const ExpenseTab = ({ user, fetchAllData }) => {
                         <label>Amount (₦)</label>
                         <input type="number" className="input-3d" placeholder="e.g. 5000" value={amount} onChange={e => setAmount(e.target.value)} required disabled={isSubmitting} />
                     </div>
+                    
                     <div className="input-group">
-                        <label>Category / Name</label>
-                        <input type="text" className="input-3d" placeholder={transactionType === 'Expense' ? "e.g. Suya, Fuel" : "e.g. Salary, Freelance"} value={categoryName} onChange={e => setCategoryName(e.target.value)} required disabled={isSubmitting} />
+                        <label>{transactionType === 'Expense' ? 'Select Budget Category' : 'Income Source'}</label>
+                        
+                        {/* THE FIX: Dropdown for Expenses, Text Input for Income */}
+                        {transactionType === 'Expense' ? (
+                            <select className="input-3d" value={categoryName} onChange={e => setCategoryName(e.target.value)} required disabled={isSubmitting}>
+                                {budgetOptions.length === 0 && <option value="" disabled>No budgets found. Please set a budget first.</option>}
+                                {budgetOptions.map(b => (
+                                    <option key={b} value={b}>{b}</option>
+                                ))}
+                                <option value="Unbudgeted">Other (Unbudgeted Expense)</option>
+                            </select>
+                        ) : (
+                            <input type="text" className="input-3d" placeholder="e.g. Salary, Freelance" value={categoryName} onChange={e => setCategoryName(e.target.value)} required disabled={isSubmitting} />
+                        )}
                     </div>
+                    
                     <div className="input-group">
                         <label>Date</label>
                         <input type="date" className="input-3d" value={date} onChange={e => setDate(e.target.value)} required disabled={isSubmitting} />
                     </div>
+                    
                     <div className="input-group">
-                        <label>Additional Notes (Optional)</label>
-                        <input type="text" className="input-3d" placeholder="Any extra details..." value={note} onChange={e => setNote(e.target.value)} disabled={isSubmitting} />
+                        <label>What did you buy? (Description)</label>
+                        <input type="text" className="input-3d" placeholder={transactionType === 'Expense' ? "e.g. Light bills, Fuel, Food stuff" : "Any extra details..."} value={note} onChange={e => setNote(e.target.value)} required={transactionType === 'Expense'} disabled={isSubmitting} />
                     </div>
+                    
                     <button type="submit" className="btn-3d-primary" style={{ marginTop: '2rem' }} disabled={isSubmitting}>
                         {isSubmitting ? 'Saving...' : `Save ${transactionType}`}
                     </button>
